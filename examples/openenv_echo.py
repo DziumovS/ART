@@ -9,9 +9,9 @@
 import asyncio
 from datetime import datetime
 
-import weave
 from dotenv import load_dotenv
 from envs.echo_env import EchoAction, EchoEnv
+import weave
 
 import art
 from art.serverless.backend import ServerlessBackend
@@ -86,7 +86,8 @@ async def main() -> None:
             [art.TrajectoryGroup(rollout(model, env_client) for env_client in env_pool)]
         )
 
-        await model.train(groups)
+        result = await backend.train(model, groups)
+        await model.log(groups, metrics=result.metrics, step=result.step, split="train")
 
 
 asyncio.run(main())

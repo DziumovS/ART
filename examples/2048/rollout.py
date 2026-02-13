@@ -2,10 +2,9 @@ import asyncio
 import math
 import os
 
+from dotenv import load_dotenv
 import openai
 import requests
-import weave
-from dotenv import load_dotenv
 from utils import (
     WINNING_VALUE,
     apply_agent_move,
@@ -15,6 +14,7 @@ from utils import (
     render_board,
     total_board_value,
 )
+import weave
 
 import art
 
@@ -57,7 +57,7 @@ async def rollout(
             return await client.chat.completions.create(
                 max_completion_tokens=128,
                 messages=trajectory.messages(),
-                model=model.name,
+                model=model.get_inference_name(),
             )
 
         try:

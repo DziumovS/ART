@@ -16,7 +16,7 @@ Train multi-step agents for real-world tasks using GRPO.
 [![PyPI version](https://img.shields.io/pypi/v/openpipe-art?color=364fc7)][pypi-url]
 [![Train Agent](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/openpipe/art-notebooks/blob/main/examples/2048/2048.ipynb)
 
-[![Join Discord](https://img.shields.io/badge/Join%20Discord-5865F2?style=plastic&logo=discord&logoColor=white)](https://discord.gg/zbBHRUpwf4)
+[![Join Discord](https://img.shields.io/badge/Join%20Discord-5865F2?style=plastic&logo=discord&logoColor=white)](https://discord.gg/EceeVdhpxD)
 [![Documentation](https://img.shields.io/badge/Documentation-orange?style=plastic&logo=gitbook&logoColor=white)](https://art.openpipe.ai)
 
 </div>
@@ -157,7 +157,6 @@ ART stands on the shoulders of giants. While we owe many of the ideas and early 
 - [vLLM](https://github.com/vllm-project/vllm)
 - [trl](https://github.com/huggingface/trl)
 - [torchtune](https://github.com/pytorch/torchtune)
-- [SkyPilot](https://github.com/skypilot-org/skypilot)
 
 Finally, thank you to our partners who've helped us test ART in the wild! We're excited to see what you all build with it.
 

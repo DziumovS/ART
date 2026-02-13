@@ -15,7 +15,7 @@ To use ART with LangGraph, install ART with the required extras:
 uv pip install -U openpipe-art[backend,langgraph]>=0.4.9
 ```
 
-The `langgraph` extra includes the LangGraph integration dependencies, while `backend` provides the training backend components. If running using the [SkyPilotBackend](/fundamentals/art-backend#skypilotbackend), substitute `skypilot` for `backend` in the extras array.
+The `langgraph` extra includes the LangGraph integration dependencies, while `backend` provides the training backend components.
 
 ## Why Use ART with LangGraph?
 
@@ -89,7 +89,7 @@ def return_final_answer_tool(answer: str, reference_message_ids: list[str]) -> d
 @weave.op
 async def rollout(model: art.Model, email_scenario: EmailScenario) -> ProjectTrajectory:
     # Initialize chat model with temperature
-    chat_model = init_chat_model(model.name, temperature=1.0)
+    chat_model = init_chat_model(model.get_inference_name(), temperature=1.0)
 
     # Define available tools
     tools = [search_inbox_tool, read_email_tool, return_final_answer_tool]
@@ -264,7 +264,7 @@ from art.utils import iterate_dataset
 
 # Initialize model and backend
 model = art.Model(name="Qwen/Qwen2.5-7B-Instruct")
-backend = art.backends.SkyPilotBackend()
+backend = art.LocalBackend()
 
 # Data models
 class EmailResult(BaseModel):
@@ -394,7 +394,7 @@ async def rollout(model: art.Model, email_scenario: EmailScenario) -> ProjectTra
         return final_answer.model_dump()
 
     tools = [search_inbox_tool, read_email_tool, return_final_answer_tool]
-    chat_model = init_chat_model(model.name, temperature=1.0)
+    chat_model = init_chat_model(model.get_inference_name(), temperature=1.0)
     react_agent = create_react_agent(chat_model, tools)
 
     try:
@@ -522,7 +522,7 @@ To use this example, simply replace the mock email functions (`search_emails`, `
 
 **Empty trajectories or no training data captured:**
 
-- Ensure you're using `init_chat_model(model.name)` in your rollout function
+- Ensure you're using `init_chat_model(model.get_inference_name())` in your rollout function
 - Verify your rollout function actually executes the agent and makes LLM calls
 - Check that `init_chat_model()` is called before creating your LangGraph agent
 

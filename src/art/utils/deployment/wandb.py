@@ -15,14 +15,19 @@ class WandbDeploymentConfig(DeploymentConfig):
     """Configuration for deploying to W&B.
 
     Supported base models:
+    - meta-llama/Llama-3.1-8B-Instruct
+    - meta-llama/Llama-3.1-70B-Instruct
     - OpenPipe/Qwen3-14B-Instruct
     - Qwen/Qwen2.5-14B-Instruct
     """
 
-    pass
+    provenance: list[str]
+    """The training provenance history for this model (e.g. ["local-rl", "serverless-rl"])."""
 
 
 WANDB_SUPPORTED_BASE_MODELS = [
+    "meta-llama/Llama-3.1-8B-Instruct",
+    "meta-llama/Llama-3.1-70B-Instruct",
     "OpenPipe/Qwen3-14B-Instruct",
     "Qwen/Qwen2.5-14B-Instruct",
 ]
@@ -32,6 +37,7 @@ def deploy_wandb(
     model: "TrainableModel",
     checkpoint_path: str,
     step: int,
+    config: "WandbDeploymentConfig | None" = None,
     verbose: bool = False,
 ) -> str:
     """Deploy a model to W&B by uploading a LoRA artifact.
@@ -40,6 +46,7 @@ def deploy_wandb(
         model: The TrainableModel to deploy.
         checkpoint_path: Local path to the checkpoint directory.
         step: The step number of the checkpoint.
+        config: Optional WandbDeploymentConfig with provenance metadata.
         verbose: Whether to print verbose output.
 
     Returns:
@@ -64,15 +71,19 @@ def deploy_wandb(
         print(f"Uploading checkpoint from {checkpoint_path} to W&B...")
 
     run = wandb.init(
+        name=model.name + " (deployment)",
         entity=model.entity,
         project=model.project,
         settings=wandb.Settings(api_key=os.environ["WANDB_API_KEY"]),
     )
     try:
+        metadata: dict[str, object] = {"wandb.base_model": model.base_model}
+        if config is not None:
+            metadata["wandb.provenance"] = config.provenance
         artifact = wandb.Artifact(
             model.name,
             type="lora",
-            metadata={"wandb.base_model": model.base_model},
+            metadata=metadata,
             storage_region="coreweave-us",
         )
         artifact.add_dir(checkpoint_path)

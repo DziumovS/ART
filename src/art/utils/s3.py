@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import asyncio
+from asyncio.subprocess import DEVNULL
 import os
 import tempfile
-import zipfile
-from asyncio.subprocess import DEVNULL
 from typing import Literal, Optional, Sequence
+import zipfile
 
 from art.errors import ForbiddenBucketCreationError
 from art.utils.output_dirs import (
@@ -256,6 +256,10 @@ async def push_model_to_s3(
         s3_bucket=s3_bucket,
         prefix=prefix,
     )
+
+    await ensure_bucket_exists(s3_bucket)
+    if verbose:
+        print(f"DEBUG: S3 sync from {local_model_dir} to {s3_path}")
     await s3_sync(local_model_dir, s3_path, verbose=verbose, delete=delete)
 
 

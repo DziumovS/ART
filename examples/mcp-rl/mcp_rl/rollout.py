@@ -5,17 +5,17 @@ Based on the art-e rollout.py structure.
 """
 
 import asyncio
+from dataclasses import dataclass
 import json
 import logging
 import os
-from dataclasses import dataclass
 
-import weave
 from dotenv import load_dotenv
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from openai import AsyncOpenAI
 from servers.python.mcp_alphavantage.server_params import server_params
+import weave
 
 import art
 
@@ -150,9 +150,7 @@ async def rollout(
                             )
 
                             response = await client.chat.completions.create(
-                                model=model.inference_model_name
-                                if model.inference_model_name
-                                else model.name,
+                                model=model.get_inference_name(),
                                 messages=traj.messages(),
                                 temperature=1.0,
                                 tools=tool_schemas,
